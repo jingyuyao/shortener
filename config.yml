@@ -2,3 +2,12 @@ logging:
   level: INFO
   loggers:
     com.jingyuyao.cms: DEBUG
+
+database:
+  driverClass: com.mysql.jdbc.Driver
+  url: jdbc:mysql://localhost:3306/cms_primary
+  user: tester  # TODO(jingyu): Use environment variables
+  password: test
+  properties:
+    serverTimezone: UTC
+    useSSL: false  # TODO(jingyu): Set up SSL in prod

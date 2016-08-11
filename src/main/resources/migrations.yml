@@ -1,0 +1,21 @@
+databaseChangeLog:
+  - changeSet:
+      id: 1
+      author: jingyu
+      changes:
+        - createTable:
+            tableName: greeting
+            columns:
+              - column:
+                  name: id
+                  type: int
+                  autoIncrement: true
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: text
+                  type: varchar(50)
+              - column:
+                  name: visits
+                  type: int

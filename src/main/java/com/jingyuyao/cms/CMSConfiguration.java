@@ -1,10 +1,20 @@
 package com.jingyuyao.cms;
 
-import io.dropwizard.Configuration;
 import com.fasterxml.jackson.annotation.JsonProperty;
-import org.hibernate.validator.constraints.*;
-import javax.validation.constraints.*;
+import io.dropwizard.Configuration;
+import io.dropwizard.db.DataSourceFactory;
+
+import javax.validation.Valid;
+import javax.validation.constraints.NotNull;
 
 class CMSConfiguration extends Configuration {
-    // TODO: implement service configuration
+
+    @JsonProperty
+    @NotNull
+    @Valid
+    private DataSourceFactory database = new DataSourceFactory();
+
+    DataSourceFactory getDataSourceFactory() {
+        return database;
+    }
 }

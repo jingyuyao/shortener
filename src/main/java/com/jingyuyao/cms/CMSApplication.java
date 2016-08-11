@@ -2,9 +2,11 @@ package com.jingyuyao.cms;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
+import com.google.inject.Key;
 import com.jingyuyao.cms.resources.GreetingResource;
 import io.dropwizard.Application;
 import io.dropwizard.jersey.setup.JerseyEnvironment;
+import io.dropwizard.migrations.MigrationsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 
@@ -22,12 +24,16 @@ public class CMSApplication extends Application<CMSConfiguration> {
     }
 
     @Override
-    public void initialize(final Bootstrap<CMSConfiguration> bootstrap) {}
+    public void initialize(final Bootstrap<CMSConfiguration> bootstrap) {
+        injector = Guice.createInjector(new CMSInitializeModule());
+
+        bootstrap.addBundle(i(new Key<MigrationsBundle<CMSConfiguration>>(){}));
+    }
 
     @Override
     public void run(final CMSConfiguration configuration,
                     final Environment environment) {
-        injector = Guice.createInjector(new CMSModule(configuration));
+        injector = injector.createChildInjector(new CMSRunModule(configuration));
 
         setUpJersey(environment.jersey());
     }
@@ -37,8 +43,13 @@ public class CMSApplication extends Application<CMSConfiguration> {
         jerseyEnvironment.register(i(GreetingResource.class));
     }
 
-    /** Helper method to use the {@link Injector} */
-    private Object i(Class cls) {
+    /** Helper method to get an instance out of the {@link Injector} */
+    private <T> T i(Class<T> cls) {
         return injector.getInstance(cls);
+    }
+
+    /** Helper method to get an instance out of the {@link Injector} */
+    private <T> T i(Key<T> key) {
+        return injector.getInstance(key);
     }
 }

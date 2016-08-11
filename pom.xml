@@ -21,6 +21,8 @@
         <dropwizard.version>1.0.0</dropwizard.version>
         <lombok.version>1.16.10</lombok.version>
         <guice.version>4.1.0</guice.version>
+        <!-- v6 is still in development -->
+        <mysql-connector-java.version>5.1.39</mysql-connector-java.version>
         <mainClass>com.jingyuyao.cms.CMSApplication</mainClass>
     </properties>
 
@@ -42,6 +44,10 @@
             <artifactId>dropwizard-core</artifactId>
         </dependency>
         <dependency>
+            <groupId>io.dropwizard</groupId>
+            <artifactId>dropwizard-migrations</artifactId>
+        </dependency>
+        <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
             <version>${lombok.version}</version>
@@ -51,17 +57,23 @@
             <artifactId>guice</artifactId>
             <version>${guice.version}</version>
             <classifier>no_aop</classifier>
-            <!-- We'll use the version specified by Dropwizard -->
             <exclusions>
+                <!-- We'll use the version specified by Dropwizard -->
                 <exclusion>
                     <groupId>javax.inject</groupId>
                     <artifactId>javax.inject</artifactId>
                 </exclusion>
+                <!-- Aspect oriented programming is disabled & it conflicts with another package -->
                 <exclusion>
                     <groupId>aopalliance</groupId>
                     <artifactId>aopalliance</artifactId>
                 </exclusion>
             </exclusions>
+        </dependency>
+        <dependency>
+            <groupId>mysql</groupId>
+            <artifactId>mysql-connector-java</artifactId>
+            <version>${mysql-connector-java.version}</version>
         </dependency>
 
         <dependency>
