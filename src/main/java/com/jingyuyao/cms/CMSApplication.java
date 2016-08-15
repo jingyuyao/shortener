@@ -5,6 +5,7 @@ import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.jingyuyao.cms.resources.GreetingResource;
 import io.dropwizard.Application;
+import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.jersey.setup.JerseyEnvironment;
 import io.dropwizard.migrations.MigrationsBundle;
 import io.dropwizard.setup.Bootstrap;
@@ -28,6 +29,7 @@ public class CMSApplication extends Application<CMSConfiguration> {
         injector = Guice.createInjector(new CMSInitializeModule());
 
         bootstrap.addBundle(i(new Key<MigrationsBundle<CMSConfiguration>>(){}));
+        bootstrap.addBundle(i(new Key<HibernateBundle<CMSConfiguration>>(){}));
     }
 
     @Override

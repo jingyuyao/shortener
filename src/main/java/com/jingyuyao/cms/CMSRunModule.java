@@ -1,7 +1,6 @@
 package com.jingyuyao.cms;
 
 import com.google.inject.AbstractModule;
-import com.jingyuyao.cms.core.GreetingModule;
 
 /** Module used for {@link CMSApplication#run} */
 class CMSRunModule extends AbstractModule {
@@ -14,7 +13,5 @@ class CMSRunModule extends AbstractModule {
     @Override
     protected void configure() {
         bind(CMSConfiguration.class).toInstance(configuration);
-
-        install(new GreetingModule());
     }
 }

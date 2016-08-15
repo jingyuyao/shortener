@@ -9,5 +9,8 @@ database:
   user: tester  # TODO(jingyu): Use environment variables
   password: test
   properties:
+    characterEncoding: UTF-8
+    hibernate.dialect: org.hibernate.dialect.MySQL5Dialect
     serverTimezone: UTC
     useSSL: false  # TODO(jingyu): Set up SSL in prod
+    useUnicode: true
