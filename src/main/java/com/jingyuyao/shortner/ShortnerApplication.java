@@ -1,9 +1,9 @@
-package com.jingyuyao.cms;
+package com.jingyuyao.shortner;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Key;
-import com.jingyuyao.cms.resources.GreetingResource;
+import com.jingyuyao.shortner.resources.GreetingResource;
 import io.dropwizard.Application;
 import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.jersey.setup.JerseyEnvironment;
@@ -11,10 +11,10 @@ import io.dropwizard.migrations.MigrationsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 
-public class CMSApplication extends Application<CMSConfiguration> {
+public class ShortnerApplication extends Application<ShortnerConfiguration> {
 
     public static void main(final String[] args) throws Exception {
-        new CMSApplication().run(args);
+        new ShortnerApplication().run(args);
     }
 
     private Injector injector;
@@ -25,17 +25,17 @@ public class CMSApplication extends Application<CMSConfiguration> {
     }
 
     @Override
-    public void initialize(final Bootstrap<CMSConfiguration> bootstrap) {
-        injector = Guice.createInjector(new CMSInitializeModule());
+    public void initialize(final Bootstrap<ShortnerConfiguration> bootstrap) {
+        injector = Guice.createInjector(new InitializeModule());
 
-        bootstrap.addBundle(i(new Key<MigrationsBundle<CMSConfiguration>>(){}));
-        bootstrap.addBundle(i(new Key<HibernateBundle<CMSConfiguration>>(){}));
+        bootstrap.addBundle(i(new Key<MigrationsBundle<ShortnerConfiguration>>(){}));
+        bootstrap.addBundle(i(new Key<HibernateBundle<ShortnerConfiguration>>(){}));
     }
 
     @Override
-    public void run(final CMSConfiguration configuration,
+    public void run(final ShortnerConfiguration configuration,
                     final Environment environment) {
-        injector = injector.createChildInjector(new CMSRunModule(configuration));
+        injector = injector.createChildInjector(new RunModule(configuration));
 
         setUpJersey(environment.jersey());
     }

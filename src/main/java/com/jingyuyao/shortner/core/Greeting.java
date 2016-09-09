@@ -1,4 +1,4 @@
-package com.jingyuyao.cms.core;
+package com.jingyuyao.shortner.core;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -30,8 +30,8 @@ import javax.persistence.Table;
 @NoArgsConstructor
 @Table(name = "greeting")
 public class Greeting {
-    public static final String FIND_ALL = "com.jingyuyao.cms.core.Greeting.findAll";
-    public static final String FIND_TEXT = "com.jingyuyao.cms.core.Greeting.findText";
+    public static final String FIND_ALL = "com.jingyuyao.shortner.core.Greeting.findAll";
+    public static final String FIND_TEXT = "com.jingyuyao.shortner.core.Greeting.findText";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -1,7 +1,7 @@
-package com.jingyuyao.cms.resources;
+package com.jingyuyao.shortner.resources;
 
-import com.jingyuyao.cms.core.Greeting;
-import com.jingyuyao.cms.db.GreetingDAO;
+import com.jingyuyao.shortner.core.Greeting;
+import com.jingyuyao.shortner.db.GreetingDAO;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;

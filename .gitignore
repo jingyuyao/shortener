@@ -1,4 +1,4 @@
-cms.iml
+*.iml
 dependency-reduced-pom.xml
 .idea/
 target/

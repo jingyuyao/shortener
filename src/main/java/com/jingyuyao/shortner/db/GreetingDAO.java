@@ -1,6 +1,6 @@
-package com.jingyuyao.cms.db;
+package com.jingyuyao.shortner.db;
 
-import com.jingyuyao.cms.core.Greeting;
+import com.jingyuyao.shortner.core.Greeting;
 import io.dropwizard.hibernate.AbstractDAO;
 import org.hibernate.SessionFactory;
 

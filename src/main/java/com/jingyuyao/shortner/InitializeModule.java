@@ -1,11 +1,11 @@
-package com.jingyuyao.cms;
+package com.jingyuyao.shortner;
 
 import com.google.common.collect.ImmutableList;
 import com.google.inject.AbstractModule;
 import com.google.inject.BindingAnnotation;
 import com.google.inject.Provides;
-import com.jingyuyao.cms.core.Greeting;
-import com.jingyuyao.cms.db.DAOModule;
+import com.jingyuyao.shortner.core.Greeting;
+import com.jingyuyao.shortner.db.DAOModule;
 import io.dropwizard.db.DataSourceFactory;
 import io.dropwizard.db.PooledDataSourceFactory;
 import io.dropwizard.hibernate.HibernateBundle;
@@ -22,8 +22,8 @@ import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.PARAMETER;
 
-/** Module used for {@link CMSApplication#initialize} */
-class CMSInitializeModule extends AbstractModule {
+/** Module used for {@link ShortnerApplication#initialize} */
+class InitializeModule extends AbstractModule {
     @BindingAnnotation
     @Retention(RetentionPolicy.RUNTIME)
     @Target({FIELD, PARAMETER, METHOD})
@@ -36,15 +36,15 @@ class CMSInitializeModule extends AbstractModule {
 
     @Provides
     @Singleton
-    MigrationsBundle<CMSConfiguration> provideMigrationsBundle() {
-        return new MigrationsBundle<CMSConfiguration>() {
+    MigrationsBundle<ShortnerConfiguration> provideMigrationsBundle() {
+        return new MigrationsBundle<ShortnerConfiguration>() {
             @Override
             public String getMigrationsFileName() {
                 return "migrations.yml";
             }
 
             @Override
-            public DataSourceFactory getDataSourceFactory(CMSConfiguration configuration) {
+            public DataSourceFactory getDataSourceFactory(ShortnerConfiguration configuration) {
                 return configuration.getDataSourceFactory();
             }
         };
@@ -52,19 +52,19 @@ class CMSInitializeModule extends AbstractModule {
 
     @Provides
     @Singleton
-    HibernateBundle<CMSConfiguration> provideHibernateBundle(
+    HibernateBundle<ShortnerConfiguration> provideHibernateBundle(
             @DatabaseEntities ImmutableList<Class<?>> hibernateClasses,
             SessionFactoryFactory sessionFactoryFactory) {
-        return new HibernateBundle<CMSConfiguration>(hibernateClasses, sessionFactoryFactory) {
+        return new HibernateBundle<ShortnerConfiguration>(hibernateClasses, sessionFactoryFactory) {
             @Override
-            public PooledDataSourceFactory getDataSourceFactory(CMSConfiguration configuration) {
+            public PooledDataSourceFactory getDataSourceFactory(ShortnerConfiguration configuration) {
                 return configuration.getDataSourceFactory();
             }
         };
     }
 
     @Provides
-    SessionFactory provideSessionFactory(HibernateBundle<CMSConfiguration> hibernateBundle) {
+    SessionFactory provideSessionFactory(HibernateBundle<ShortnerConfiguration> hibernateBundle) {
         return hibernateBundle.getSessionFactory();
     }
 

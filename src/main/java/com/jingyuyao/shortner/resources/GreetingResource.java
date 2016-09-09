@@ -1,7 +1,7 @@
-package com.jingyuyao.cms.resources;
+package com.jingyuyao.shortner.resources;
 
-import com.jingyuyao.cms.core.Greeting;
-import com.jingyuyao.cms.db.GreetingDAO;
+import com.jingyuyao.shortner.core.Greeting;
+import com.jingyuyao.shortner.db.GreetingDAO;
 import io.dropwizard.hibernate.UnitOfWork;
 import org.hibernate.HibernateException;
 

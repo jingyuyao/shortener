@@ -1,4 +1,4 @@
-package com.jingyuyao.cms.db;
+package com.jingyuyao.shortner.db;
 
 import com.google.inject.AbstractModule;
 
