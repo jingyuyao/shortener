@@ -1,6 +1,6 @@
-# CMS
+# Shortner
 
-How to start the CMS application
+How to start the Shortner application
 ---
 
 1. Run `mvn clean package` to build your application
