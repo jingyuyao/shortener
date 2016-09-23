@@ -18,20 +18,20 @@ import javax.persistence.Table;
 @NamedQueries(
         {
             @NamedQuery(
-                    name = Greeting.FIND_ALL,
-                    query = "SELECT g FROM Greeting g"
+                    name = Link.FIND_ALL,
+                    query = "SELECT l FROM Link l"
             ),
             @NamedQuery(
-                    name = Greeting.FIND_TEXT,
-                    query = "SELECT g FROM Greeting g WHERE g.text = :text"
+                    name = Link.FIND_ID,
+                    query = "SELECT l FROM Link l WHERE l.id = :id"
             )
         }
 )
 @NoArgsConstructor
-@Table(name = "greeting")
-public class Greeting {
-    public static final String FIND_ALL = "com.jingyuyao.shortner.core.Greeting.findAll";
-    public static final String FIND_TEXT = "com.jingyuyao.shortner.core.Greeting.findText";
+@Table(name = "link")
+public class Link {
+    public static final String FIND_ALL = "com.jingyuyao.shortner.core.Link.findAll";
+    public static final String FIND_ID = "com.jingyuyao.shortner.core.Link.findId";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -39,7 +39,7 @@ public class Greeting {
 
     @Column(nullable = false)
     @Length(max = 50)
-    private String text;
+    private String url;
 
     @Column(nullable = false)
     private long visits;

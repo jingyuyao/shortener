@@ -3,7 +3,7 @@ package com.jingyuyao.shortner;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Key;
-import com.jingyuyao.shortner.resources.GreetingResource;
+import com.jingyuyao.shortner.resources.LinkResource;
 import io.dropwizard.Application;
 import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.jersey.setup.JerseyEnvironment;
@@ -42,7 +42,7 @@ public class ShortnerApplication extends Application<ShortnerConfiguration> {
 
     /** Sets up the Jersey environment with resources */
     private void setUpJersey(JerseyEnvironment jerseyEnvironment) {
-        jerseyEnvironment.register(i(GreetingResource.class));
+        jerseyEnvironment.register(i(LinkResource.class));
     }
 
     /** Helper method to get an instance out of the {@link Injector} */

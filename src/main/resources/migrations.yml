@@ -4,18 +4,18 @@ databaseChangeLog:
       author: jingyu
       changes:
         - createTable:
-            tableName: greeting
+            tableName: link
             columns:
               - column:
                   name: id
-                  type: int
+                  type: int unsigned
                   autoIncrement: true
                   constraints:
                     primaryKey: true
                     nullable: false
               - column:
-                  name: text
-                  type: varchar(50)
+                  name: url
+                  type: text
               - column:
                   name: visits
-                  type: int
+                  type: int unsigned
