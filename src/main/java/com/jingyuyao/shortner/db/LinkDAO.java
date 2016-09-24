@@ -31,16 +31,4 @@ public class LinkDAO extends AbstractDAO<Link> {
         Link link = uniqueResult(namedQuery(Link.FIND_ID).setParameter("id", id));
         return Optional.ofNullable(link);
     }
-
-    /**
-     * Creates a {@link Link} from the given {@code url}. This method does not save the {@link Link} in the database.
-     * @param url the url for this link
-     * @return the created {@link Link}
-     */
-    public Link createLink(String url) {
-        Link link = new Link();
-        link.setUrl(url);
-        link.setVisits(0);
-        return link;
-    }
 }
