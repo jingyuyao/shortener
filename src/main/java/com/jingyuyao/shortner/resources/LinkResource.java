@@ -1,6 +1,7 @@
 package com.jingyuyao.shortner.resources;
 
 import com.jingyuyao.shortner.api.CreateLink;
+import com.jingyuyao.shortner.api.Error;
 import com.jingyuyao.shortner.core.Link;
 import com.jingyuyao.shortner.db.LinkDAO;
 import io.dropwizard.hibernate.UnitOfWork;
@@ -49,8 +50,10 @@ public class LinkResource {
         if (violations.isEmpty()) {
             return Response.ok(dao.save(newLink)).build();
         } else {
-            // TODO: Return the specific violations
-            return Response.status(Response.Status.BAD_REQUEST).build();
+            return Response
+                    .status(Response.Status.BAD_REQUEST)
+                    .entity(Error.create(violations))
+                    .build();
         }
     }
 
@@ -76,7 +79,7 @@ public class LinkResource {
 
             return Response.temporaryRedirect(redirectLink).build();
         } else {
-            return Response.status(Response.Status.BAD_REQUEST).build();
+            return Response.status(Response.Status.NOT_FOUND).build();
         }
     }
 }
