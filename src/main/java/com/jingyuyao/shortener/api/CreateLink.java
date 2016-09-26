@@ -9,5 +9,8 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class CreateLink {
+    /**
+     * The url to shorten
+     */
     private String url;
 }

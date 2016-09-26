@@ -41,8 +41,8 @@ public class ShortenerApplication extends Application<ShortenerConfiguration> {
     }
 
     /** Sets up the Jersey environment with resources */
-    private void setUpJersey(JerseyEnvironment jerseyEnvironment) {
-        jerseyEnvironment.register(i(LinkResource.class));
+    private void setUpJersey(JerseyEnvironment jersey) {
+        jersey.register(i(LinkResource.class));
     }
 
     /** Helper method to get an instance out of the {@link Injector} */

@@ -1,5 +1,6 @@
 package com.jingyuyao.shortener.core;
 
+import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
@@ -29,6 +30,7 @@ import javax.persistence.Table;
             )
         }
 )
+@AllArgsConstructor
 @NoArgsConstructor
 @Table(name = "link")
 public class Link {
@@ -37,7 +39,7 @@ public class Link {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private int id;
 
     @Column(nullable = false)
     @Length(max = 50)
@@ -46,5 +48,5 @@ public class Link {
     private String url;
 
     @Column(nullable = false)
-    private long visits;
+    private int visits;
 }

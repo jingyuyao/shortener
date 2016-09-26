@@ -18,6 +18,11 @@ import java.util.stream.Collectors;
 public class ApiError {
     private List<String> errorMessages;
 
+    /**
+     * Creates an {@link ApiError} from a set of {@link ConstraintViolation}s
+     * @param violations the set of {@link ConstraintViolation}s for this error
+     * @return an {@link ApiError} with a list of error messages extracted from the violations
+     */
     public static <T> ApiError create(Set<ConstraintViolation<T>> violations) {
         List<String> errorMessages = violations
                 .stream()
