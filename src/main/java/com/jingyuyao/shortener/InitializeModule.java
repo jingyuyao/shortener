@@ -34,6 +34,13 @@ class InitializeModule extends AbstractModule {
         install(new DAOModule());
     }
 
+    @DatabaseEntities
+    @Provides
+    @Singleton
+    ImmutableList<Class<?>> provideDatabaseEntities() {
+        return ImmutableList.of(Link.class);
+    }
+
     @Provides
     @Singleton
     MigrationsBundle<ShortenerConfiguration> provideMigrationsBundle() {
@@ -72,12 +79,5 @@ class InitializeModule extends AbstractModule {
     @Singleton
     SessionFactoryFactory provideSessionFactoryFactory() {
         return new SessionFactoryFactory();
-    }
-
-    @DatabaseEntities
-    @Provides
-    @Singleton
-    ImmutableList<Class<?>> provideDatabaseEntities() {
-        return ImmutableList.of(Link.class);
     }
 }

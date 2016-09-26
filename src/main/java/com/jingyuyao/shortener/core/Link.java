@@ -3,6 +3,8 @@ package com.jingyuyao.shortener.core;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.hibernate.validator.constraints.Length;
+import org.hibernate.validator.constraints.NotBlank;
+import org.hibernate.validator.constraints.URL;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -39,6 +41,8 @@ public class Link {
 
     @Column(nullable = false)
     @Length(max = 50)
+    @NotBlank
+    @URL
     private String url;
 
     @Column(nullable = false)
