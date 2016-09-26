@@ -1,8 +1,8 @@
-package com.jingyuyao.shortner.resources;
+package com.jingyuyao.shortener.resources;
 
-import com.jingyuyao.shortner.api.CreateLink;
-import com.jingyuyao.shortner.core.Link;
-import com.jingyuyao.shortner.db.LinkDAO;
+import com.jingyuyao.shortener.api.CreateLink;
+import com.jingyuyao.shortener.core.Link;
+import com.jingyuyao.shortener.db.LinkDAO;
 import io.dropwizard.hibernate.UnitOfWork;
 import org.hibernate.HibernateException;
 

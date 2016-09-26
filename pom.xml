@@ -8,12 +8,12 @@
         <maven>3.3.9</maven>
     </prerequisites>
 
-    <groupId>com.jingyuyao.shortner</groupId>
-    <artifactId>shortner</artifactId>
+    <groupId>com.jingyuyao.shortener</groupId>
+    <artifactId>shortener</artifactId>
     <version>1.0-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>Shortner</name>
+    <name>Shortener</name>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -23,7 +23,7 @@
         <guice.version>4.1.0</guice.version>
         <!-- v6 is still in development -->
         <mysql-connector-java.version>5.1.39</mysql-connector-java.version>
-        <mainClass>com.jingyuyao.shortner.ShortnerApplication</mainClass>
+        <mainClass>com.jingyuyao.shortener.ShortenerApplication</mainClass>
     </properties>
 
     <dependencyManagement>

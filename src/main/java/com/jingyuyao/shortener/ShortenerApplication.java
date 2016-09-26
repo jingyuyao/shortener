@@ -1,9 +1,9 @@
-package com.jingyuyao.shortner;
+package com.jingyuyao.shortener;
 
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Key;
-import com.jingyuyao.shortner.resources.LinkResource;
+import com.jingyuyao.shortener.resources.LinkResource;
 import io.dropwizard.Application;
 import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.jersey.setup.JerseyEnvironment;
@@ -11,10 +11,10 @@ import io.dropwizard.migrations.MigrationsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
 
-public class ShortnerApplication extends Application<ShortnerConfiguration> {
+public class ShortenerApplication extends Application<ShortenerConfiguration> {
 
     public static void main(final String[] args) throws Exception {
-        new ShortnerApplication().run(args);
+        new ShortenerApplication().run(args);
     }
 
     private Injector injector;
@@ -25,15 +25,15 @@ public class ShortnerApplication extends Application<ShortnerConfiguration> {
     }
 
     @Override
-    public void initialize(final Bootstrap<ShortnerConfiguration> bootstrap) {
+    public void initialize(final Bootstrap<ShortenerConfiguration> bootstrap) {
         injector = Guice.createInjector(new InitializeModule());
 
-        bootstrap.addBundle(i(new Key<MigrationsBundle<ShortnerConfiguration>>(){}));
-        bootstrap.addBundle(i(new Key<HibernateBundle<ShortnerConfiguration>>(){}));
+        bootstrap.addBundle(i(new Key<MigrationsBundle<ShortenerConfiguration>>(){}));
+        bootstrap.addBundle(i(new Key<HibernateBundle<ShortenerConfiguration>>(){}));
     }
 
     @Override
-    public void run(final ShortnerConfiguration configuration,
+    public void run(final ShortenerConfiguration configuration,
                     final Environment environment) {
         injector = injector.createChildInjector(new RunModule(configuration));
 

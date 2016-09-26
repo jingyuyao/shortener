@@ -1,11 +1,11 @@
-package com.jingyuyao.shortner;
+package com.jingyuyao.shortener;
 
 import com.google.common.collect.ImmutableList;
 import com.google.inject.AbstractModule;
 import com.google.inject.BindingAnnotation;
 import com.google.inject.Provides;
-import com.jingyuyao.shortner.core.Link;
-import com.jingyuyao.shortner.db.DAOModule;
+import com.jingyuyao.shortener.core.Link;
+import com.jingyuyao.shortener.db.DAOModule;
 import io.dropwizard.db.DataSourceFactory;
 import io.dropwizard.db.PooledDataSourceFactory;
 import io.dropwizard.hibernate.HibernateBundle;
@@ -22,7 +22,7 @@ import static java.lang.annotation.ElementType.FIELD;
 import static java.lang.annotation.ElementType.METHOD;
 import static java.lang.annotation.ElementType.PARAMETER;
 
-/** Module used for {@link ShortnerApplication#initialize} */
+/** Module used for {@link ShortenerApplication#initialize} */
 class InitializeModule extends AbstractModule {
     @BindingAnnotation
     @Retention(RetentionPolicy.RUNTIME)
@@ -36,15 +36,15 @@ class InitializeModule extends AbstractModule {
 
     @Provides
     @Singleton
-    MigrationsBundle<ShortnerConfiguration> provideMigrationsBundle() {
-        return new MigrationsBundle<ShortnerConfiguration>() {
+    MigrationsBundle<ShortenerConfiguration> provideMigrationsBundle() {
+        return new MigrationsBundle<ShortenerConfiguration>() {
             @Override
             public String getMigrationsFileName() {
                 return "migrations.yml";
             }
 
             @Override
-            public DataSourceFactory getDataSourceFactory(ShortnerConfiguration configuration) {
+            public DataSourceFactory getDataSourceFactory(ShortenerConfiguration configuration) {
                 return configuration.getDataSourceFactory();
             }
         };
@@ -52,19 +52,19 @@ class InitializeModule extends AbstractModule {
 
     @Provides
     @Singleton
-    HibernateBundle<ShortnerConfiguration> provideHibernateBundle(
+    HibernateBundle<ShortenerConfiguration> provideHibernateBundle(
             @DatabaseEntities ImmutableList<Class<?>> hibernateClasses,
             SessionFactoryFactory sessionFactoryFactory) {
-        return new HibernateBundle<ShortnerConfiguration>(hibernateClasses, sessionFactoryFactory) {
+        return new HibernateBundle<ShortenerConfiguration>(hibernateClasses, sessionFactoryFactory) {
             @Override
-            public PooledDataSourceFactory getDataSourceFactory(ShortnerConfiguration configuration) {
+            public PooledDataSourceFactory getDataSourceFactory(ShortenerConfiguration configuration) {
                 return configuration.getDataSourceFactory();
             }
         };
     }
 
     @Provides
-    SessionFactory provideSessionFactory(HibernateBundle<ShortnerConfiguration> hibernateBundle) {
+    SessionFactory provideSessionFactory(HibernateBundle<ShortenerConfiguration> hibernateBundle) {
         return hibernateBundle.getSessionFactory();
     }
 

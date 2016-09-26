@@ -1,6 +1,6 @@
-package com.jingyuyao.shortner.db;
+package com.jingyuyao.shortener.db;
 
-import com.jingyuyao.shortner.core.Link;
+import com.jingyuyao.shortener.core.Link;
 import io.dropwizard.hibernate.AbstractDAO;
 import org.hibernate.SessionFactory;
 

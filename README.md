@@ -1,10 +1,10 @@
-# Shortner
+# Shortener
 
-How to start the Shortner application
+How to start the Shortener application
 ---
 
 1. Run `mvn clean package` to build your application
-1. Start application with `./shortner.sh server config.yml`
+1. Start application with `./shortener.sh server config.yml`
 1. To check that your application is running enter url `http://localhost:8080`
 
 Health Check

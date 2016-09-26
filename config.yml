@@ -1,11 +1,11 @@
 logging:
   level: INFO
   loggers:
-    com.jingyuyao.shortner: DEBUG
+    com.jingyuyao.shortener: DEBUG
 
 database:
   driverClass: com.mysql.jdbc.Driver
-  url: jdbc:mysql://localhost:3306/shortner_primary
+  url: jdbc:mysql://localhost:3306/shortener_primary
   user: tester  # TODO(jingyu): Use environment variables
   password: test
   properties:

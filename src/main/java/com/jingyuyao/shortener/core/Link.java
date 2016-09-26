@@ -1,4 +1,4 @@
-package com.jingyuyao.shortner.core;
+package com.jingyuyao.shortener.core;
 
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -30,8 +30,8 @@ import javax.persistence.Table;
 @NoArgsConstructor
 @Table(name = "link")
 public class Link {
-    public static final String FIND_ALL = "com.jingyuyao.shortner.core.Link.findAll";
-    public static final String FIND_ID = "com.jingyuyao.shortner.core.Link.findId";
+    public static final String FIND_ALL = "com.jingyuyao.shortener.core.Link.findAll";
+    public static final String FIND_ID = "com.jingyuyao.shortener.core.Link.findId";
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
