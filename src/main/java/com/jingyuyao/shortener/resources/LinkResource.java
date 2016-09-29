@@ -4,7 +4,7 @@ import com.jingyuyao.shortener.api.ApiError;
 import com.jingyuyao.shortener.api.CreateLink;
 import com.jingyuyao.shortener.api.ShortenedLink;
 import com.jingyuyao.shortener.core.Link;
-import com.jingyuyao.shortener.core.NumToString;
+import com.jingyuyao.shortener.core.IdEncoder;
 import com.jingyuyao.shortener.db.LinkDAO;
 import io.dropwizard.hibernate.UnitOfWork;
 
@@ -68,7 +68,7 @@ public class LinkResource {
     @UnitOfWork
     @Path("/{id}")
     public Response redirect(@PathParam("id") String id) {
-        int decodedId = NumToString.decode(id);
+        int decodedId = IdEncoder.decode(id);
         Optional<Link> optionalLink = dao.getById(decodedId);
 
         if (optionalLink.isPresent()) {

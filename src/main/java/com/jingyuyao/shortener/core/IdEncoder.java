@@ -8,7 +8,7 @@ import java.util.Map;
  *
  * <see>http://stackoverflow.com/a/561704</see>
  */
-public class NumToString {
+public class IdEncoder {
     private static char[] ALPHABET =
             "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789".toCharArray();
     private static int BASE = ALPHABET.length;

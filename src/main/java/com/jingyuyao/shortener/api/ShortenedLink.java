@@ -1,7 +1,7 @@
 package com.jingyuyao.shortener.api;
 
 import com.jingyuyao.shortener.core.Link;
-import com.jingyuyao.shortener.core.NumToString;
+import com.jingyuyao.shortener.core.IdEncoder;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,7 +18,7 @@ public class ShortenedLink {
     private int visits;
 
     public ShortenedLink(Link link) {
-        this.id = NumToString.encode(link.getId());
+        this.id = IdEncoder.encode(link.getId());
         this.url = link.getUrl();
         this.visits = link.getVisits();
     }
