@@ -5,6 +5,7 @@ Prerequisites
 - Maven
 - Java 8
 - Mysql
+- Redis
 - Lombok plugin for IDE of your choice
 
 How to start the Shortener application
