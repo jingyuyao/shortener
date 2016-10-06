@@ -66,7 +66,7 @@ public class LinkResourceTest {
 
         assertThat(links.size()).isEqualTo(1);
         assertThat(links.get(0).getUrl()).isEqualTo(DUMMY_LINK.getUrl());
-        assertThat(links.get(0).getId()).isEqualTo(DUMMY_LINK.getId());
+        assertThat(links.get(0).getId()).isEqualTo(IdEncoder.encode(DUMMY_LINK.getId()));
     }
 
     @Test
