@@ -14,3 +14,6 @@ database:
     serverTimezone: UTC
     useSSL: false  # TODO(jingyu): Set up SSL in prod
     useUnicode: true
+
+jedis:
+  host: localhost

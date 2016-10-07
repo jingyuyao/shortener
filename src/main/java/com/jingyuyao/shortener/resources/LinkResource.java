@@ -7,6 +7,7 @@ import com.jingyuyao.shortener.core.Link;
 import com.jingyuyao.shortener.core.IdEncoder;
 import com.jingyuyao.shortener.db.LinkDAO;
 import io.dropwizard.hibernate.UnitOfWork;
+import redis.clients.jedis.Jedis;
 
 import javax.inject.Inject;
 import javax.validation.ConstraintViolation;
@@ -25,11 +26,13 @@ import java.util.stream.Collectors;
 public class LinkResource {
     private final Validator validator;
     private final LinkDAO dao;
+    private final Jedis jedis;
 
     @Inject
-    LinkResource(Validator validator, LinkDAO dao) {
+    LinkResource(Validator validator, LinkDAO dao, Jedis jedis) {
         this.validator = validator;
         this.dao = dao;
+        this.jedis = jedis;
     }
 
     @GET
@@ -68,27 +71,60 @@ public class LinkResource {
     @UnitOfWork
     @Path("/{id}")
     public Response redirect(@PathParam("id") String id) {
-        int decodedId = IdEncoder.decode(id);
-        Optional<Link> optionalLink = dao.getById(decodedId);
-
-        if (optionalLink.isPresent()) {
-            Link link = optionalLink.get();
-            URI redirectUri;
-
-            try {
-                redirectUri = URI.create(link.getUrl());
-            } catch (IllegalArgumentException e) {
-                // Catches malformed URL. Return internal error since this shouldn't be possible.
-                // TODO: Should we delete the link in this case?
+        if (jedis.exists(id)) {
+            Optional<URI> optionalUri = getUri(jedis.get(id));
+            if (!optionalUri.isPresent()) {
+                jedis.del(id);
                 return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
             }
 
-            link.setVisits(link.getVisits() + 1);
-            dao.save(link);
+            // TODO: This doesn't work since hibernate session is only alive during the request
+            // We need to create a new class that is not bounded to the request using the following method
+            // http://www.dropwizard.io/1.0.0/docs/manual/hibernate.html#transactional-resource-methods
+            // then we can invoke the saving using that object instead. This means we can probably move
+            // @UnitOfWork to that class entirely
+            new Thread(() -> {
+                Optional<Link> optionalLink = getLink(id);
+                if (optionalLink.isPresent()) {
+                    saveAnalytics(optionalLink.get());
+                }
+            }).start();
 
-            return Response.temporaryRedirect(redirectUri).build();
-        } else {
+            return Response.temporaryRedirect(optionalUri.get()).build();
+        }
+
+        Optional<Link> optionalLink = getLink(id);
+        if (!optionalLink.isPresent()) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
+
+        Optional<URI> optionalUri = getUri(optionalLink.get().getUrl());
+        if (!optionalUri.isPresent()) {
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+
+        jedis.set(id, optionalLink.get().getUrl());
+        saveAnalytics(optionalLink.get());
+
+        return Response.temporaryRedirect(optionalUri.get()).build();
+    }
+
+    private Optional<Link> getLink(String id) {
+        return dao.getById(IdEncoder.decode(id));
+    }
+
+    private Optional<URI> getUri(String url) {
+        try {
+            URI uri = URI.create(url);
+            return Optional.of(uri);
+        } catch (IllegalArgumentException e) {
+            // Catches malformed URL.
+            return Optional.empty();
+        }
+    }
+
+    private void saveAnalytics(Link link) {
+        link.setVisits(link.getVisits() + 1);
+        dao.save(link);
     }
 }

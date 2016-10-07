@@ -2,8 +2,9 @@ package com.jingyuyao.shortener;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
-import com.google.inject.Singleton;
+import redis.clients.jedis.Jedis;
 
+import javax.inject.Singleton;
 import javax.validation.Validation;
 import javax.validation.Validator;
 import javax.validation.ValidatorFactory;
@@ -30,5 +31,11 @@ class RunModule extends AbstractModule {
     @Singleton
     ValidatorFactory provideValidatorFactory() {
         return Validation.buildDefaultValidatorFactory();
+    }
+
+    @Provides
+    @Singleton
+    Jedis provideJedis() {
+        return configuration.getJedisFactory().build();
     }
 }

@@ -1,7 +1,6 @@
 package com.jingyuyao.shortener.resources;
 
 import com.google.common.collect.ImmutableList;
-import com.google.common.collect.ImmutableSet;
 import com.jingyuyao.shortener.api.CreateLink;
 import com.jingyuyao.shortener.api.ShortenedLink;
 import com.jingyuyao.shortener.core.Link;
@@ -13,15 +12,14 @@ import org.mockito.ArgumentCaptor;
 import org.mockito.Captor;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
+import redis.clients.jedis.Jedis;
 
-import javax.validation.ConstraintViolation;
 import javax.validation.Validator;
 import javax.ws.rs.core.Response;
 
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.AdditionalAnswers.returnsFirstArg;
@@ -34,18 +32,21 @@ public class LinkResourceTest {
     private static final String URL = "http://www.example.org";
     private static final int ID = 1;
     private static final String ENCODED_ID = IdEncoder.encode(ID);
-    private static final Link DUMMY_LINK = new Link(1, "http://www.example.org", 0);
-    private static final List<Link> LINKS = ImmutableList.of(DUMMY_LINK);
+    private static final int INITIAL_VISITS = 0;
 
     @Mock
     private Validator validator;
     @Mock
     private LinkDAO dao;
     @Mock
+    private Jedis jedis;
+    @Mock
     private CreateLink createLink;
     @Captor
     private ArgumentCaptor<Link> linkCaptor;
 
+    private Link dummyLink;
+    private List<Link> dummyLinks;
     private LinkResource resource;
 
     @Before
@@ -53,20 +54,23 @@ public class LinkResourceTest {
         MockitoAnnotations.initMocks(this);
         when(validator.validate(any(Link.class))).thenReturn(Collections.emptySet());
 
-        resource = new LinkResource(validator, dao);
+        dummyLink = new Link(ID, URL, INITIAL_VISITS);
+        dummyLinks = ImmutableList.of(dummyLink);
+
+        resource = new LinkResource(validator, dao, jedis);
     }
 
     @Test
     public void getLinks() {
-        when(dao.findAll()).thenReturn(LINKS);
+        when(dao.findAll()).thenReturn(dummyLinks);
 
         Response response = resource.getLinks();
         @SuppressWarnings("unchecked")
         List<ShortenedLink> links = (List<ShortenedLink>) response.getEntity();
 
         assertThat(links.size()).isEqualTo(1);
-        assertThat(links.get(0).getUrl()).isEqualTo(DUMMY_LINK.getUrl());
-        assertThat(links.get(0).getId()).isEqualTo(IdEncoder.encode(DUMMY_LINK.getId()));
+        assertThat(links.get(0).getUrl()).isEqualTo(URL);
+        assertThat(links.get(0).getId()).isEqualTo(IdEncoder.encode(ID));
     }
 
     @Test
@@ -84,11 +88,29 @@ public class LinkResourceTest {
 
     @Test
     public void redirect() {
-        when(dao.getById(ID)).thenReturn(Optional.of(DUMMY_LINK));
+        when(dao.getById(ID)).thenReturn(Optional.of(dummyLink));
 
         Response response = resource.redirect(ENCODED_ID);
 
         assertThat(response.getStatusInfo()).isEqualTo(Response.Status.TEMPORARY_REDIRECT);
-        assertThat(response.getLocation().toString()).isEqualTo(DUMMY_LINK.getUrl());
+        assertThat(response.getLocation().toString()).isEqualTo(URL);
+        verify(dao).save(linkCaptor.capture());
+        assertThat(linkCaptor.getValue().getVisits()).isEqualTo(INITIAL_VISITS + 1);
+        verify(jedis).set(ENCODED_ID, URL);
+    }
+
+    @Test
+    public void redirect_cached() {
+        when(jedis.exists(ENCODED_ID)).thenReturn(true);
+        when(jedis.get(ENCODED_ID)).thenReturn(URL);
+        when(dao.getById(ID)).thenReturn(Optional.of(dummyLink));
+
+        Response response = resource.redirect(ENCODED_ID);
+
+        assertThat(response.getStatusInfo()).isEqualTo(Response.Status.TEMPORARY_REDIRECT);
+        assertThat(response.getLocation().toString()).isEqualTo(URL);
+        // TODO: How to test async saving of analytics data?
+        // verify(dao).save(linkCaptor.capture());
+        // assertThat(linkCaptor.getValue().getVisits()).isEqualTo(INITIAL_VISITS + 1);
     }
 }
