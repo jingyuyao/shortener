@@ -38,13 +38,4 @@ public class AnalyticsProcessorTest {
         verify(dao).save(linkCaptor.capture());
         assertThat(linkCaptor.getValue().getVisits()).isEqualTo(1);
     }
-
-    @Test
-    public void process() {
-        Link link = new Link(0 , "http://www.example.org", 0);
-
-        analyticsProcessor.process(link);
-
-        assertThat(link.getVisits()).isEqualTo(1);
-    }
 }

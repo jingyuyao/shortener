@@ -13,16 +13,13 @@ public class AnalyticsProcessor {
     }
 
     @UnitOfWork
-    public void visited(int id) {
+    public Optional<Link> visited(int id) {
         Optional<Link> optionalLink = dao.getById(id);
         if (optionalLink.isPresent()) {
             Link link = optionalLink.get();
-            process(link);
+            link.setVisits(link.getVisits() + 1);
             dao.save(link);
         }
-    }
-
-    public void process(Link link) {
-        link.setVisits(link.getVisits() + 1);
+        return optionalLink;
     }
 }

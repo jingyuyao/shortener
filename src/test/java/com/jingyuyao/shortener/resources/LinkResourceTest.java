@@ -90,14 +90,14 @@ public class LinkResourceTest {
     }
 
     @Test
-    public void redirect() {
-        when(dao.getById(ID)).thenReturn(Optional.of(dummyLink));
+    public void redirect_not_cached() {
+        when(analyticsProcessor.visited(ID)).thenReturn(Optional.of(dummyLink));
 
         Response response = resource.redirect(ENCODED_ID);
 
         assertThat(response.getStatusInfo()).isEqualTo(Response.Status.TEMPORARY_REDIRECT);
         assertThat(response.getLocation().toString()).isEqualTo(URL);
-        verify(analyticsProcessor).process(linkCaptor.capture());
+        verify(analyticsProcessor).visited(ID);
         verify(jedis).set(ENCODED_ID, URL);
     }
 

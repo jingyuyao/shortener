@@ -71,13 +71,10 @@ public class LinkResource {
     }
 
     @GET
-    @UnitOfWork
     @Path("/{id}")
     public Response redirect(@PathParam("id") String id) {
-        // TODO: Completely get rid of UnitOfWork in the main thread for the cache case
-        // We might need to off load dao.getById() to the analytics processor completely
-        // Even with always acquiring an unused jdbc connection offloading analytics saving to
-        // another thread is already 2.6 times faster
+        // No need to use @UnitOfWork annotation since we cheated by using analyticsProcessor to
+        // find the link for us. This avoids getting an unused JDBC connection when we have a cache hit
         if (jedis.exists(id)) {
             return redirectCached(id);
         }
@@ -85,7 +82,7 @@ public class LinkResource {
     }
 
     private Response redirectNotCached(String id) {
-        Optional<Link> optionalLink = dao.getById(IdEncoder.decode(id));
+        Optional<Link> optionalLink = analyticsProcessor.visited(IdEncoder.decode(id));
         if (!optionalLink.isPresent()) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
@@ -95,10 +92,7 @@ public class LinkResource {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
 
-        Link link = optionalLink.get();
-        jedis.set(id, link.getUrl());
-        analyticsProcessor.process(link);
-        dao.save(link);
+        jedis.set(id, optionalLink.get().getUrl());
 
         return Response.temporaryRedirect(optionalUri.get()).build();
     }
