@@ -3,6 +3,7 @@ package com.jingyuyao.shortener.resources;
 import com.jingyuyao.shortener.api.ApiError;
 import com.jingyuyao.shortener.api.CreateLink;
 import com.jingyuyao.shortener.api.ShortenedLink;
+import com.jingyuyao.shortener.core.AnalyticsProcessor;
 import com.jingyuyao.shortener.core.Link;
 import com.jingyuyao.shortener.core.IdEncoder;
 import com.jingyuyao.shortener.db.LinkDAO;
@@ -27,12 +28,14 @@ public class LinkResource {
     private final Validator validator;
     private final LinkDAO dao;
     private final Jedis jedis;
+    private final AnalyticsProcessor analyticsProcessor;
 
     @Inject
-    LinkResource(Validator validator, LinkDAO dao, Jedis jedis) {
+    LinkResource(Validator validator, LinkDAO dao, Jedis jedis, AnalyticsProcessor analyticsProcessor) {
         this.validator = validator;
         this.dao = dao;
         this.jedis = jedis;
+        this.analyticsProcessor = analyticsProcessor;
     }
 
     @GET
@@ -71,29 +74,18 @@ public class LinkResource {
     @UnitOfWork
     @Path("/{id}")
     public Response redirect(@PathParam("id") String id) {
+        // TODO: Completely get rid of UnitOfWork in the main thread for the cache case
+        // We might need to off load dao.getById() to the analytics processor completely
+        // Even with always acquiring an unused jdbc connection offloading analytics saving to
+        // another thread is already 2.6 times faster
         if (jedis.exists(id)) {
-            Optional<URI> optionalUri = getUri(jedis.get(id));
-            if (!optionalUri.isPresent()) {
-                jedis.del(id);
-                return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
-            }
-
-            // TODO: This doesn't work since hibernate session is only alive during the request
-            // We need to create a new class that is not bounded to the request using the following method
-            // http://www.dropwizard.io/1.0.0/docs/manual/hibernate.html#transactional-resource-methods
-            // then we can invoke the saving using that object instead. This means we can probably move
-            // @UnitOfWork to that class entirely
-            new Thread(() -> {
-                Optional<Link> optionalLink = getLink(id);
-                if (optionalLink.isPresent()) {
-                    saveAnalytics(optionalLink.get());
-                }
-            }).start();
-
-            return Response.temporaryRedirect(optionalUri.get()).build();
+            return redirectCached(id);
         }
+        return redirectNotCached(id);
+    }
 
-        Optional<Link> optionalLink = getLink(id);
+    private Response redirectNotCached(String id) {
+        Optional<Link> optionalLink = dao.getById(IdEncoder.decode(id));
         if (!optionalLink.isPresent()) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
@@ -103,14 +95,24 @@ public class LinkResource {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
 
-        jedis.set(id, optionalLink.get().getUrl());
-        saveAnalytics(optionalLink.get());
+        Link link = optionalLink.get();
+        jedis.set(id, link.getUrl());
+        analyticsProcessor.process(link);
+        dao.save(link);
 
         return Response.temporaryRedirect(optionalUri.get()).build();
     }
 
-    private Optional<Link> getLink(String id) {
-        return dao.getById(IdEncoder.decode(id));
+    private Response redirectCached(String id) {
+        Optional<URI> optionalUri = getUri(jedis.get(id));
+        if (!optionalUri.isPresent()) {
+            jedis.del(id);
+            return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
+        }
+
+        new Thread(() -> analyticsProcessor.visited(IdEncoder.decode(id))).start();
+
+        return Response.temporaryRedirect(optionalUri.get()).build();
     }
 
     private Optional<URI> getUri(String url) {
@@ -121,10 +123,5 @@ public class LinkResource {
             // Catches malformed URL.
             return Optional.empty();
         }
-    }
-
-    private void saveAnalytics(Link link) {
-        link.setVisits(link.getVisits() + 1);
-        dao.save(link);
     }
 }

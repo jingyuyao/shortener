@@ -2,6 +2,10 @@ package com.jingyuyao.shortener;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
+import com.jingyuyao.shortener.core.AnalyticsProcessor;
+import com.jingyuyao.shortener.db.LinkDAO;
+import io.dropwizard.hibernate.HibernateBundle;
+import io.dropwizard.hibernate.UnitOfWorkAwareProxyFactory;
 import redis.clients.jedis.Jedis;
 
 import javax.inject.Singleton;
@@ -31,6 +35,14 @@ class RunModule extends AbstractModule {
     @Singleton
     ValidatorFactory provideValidatorFactory() {
         return Validation.buildDefaultValidatorFactory();
+    }
+
+    @Provides
+    @Singleton
+    AnalyticsProcessor provideAnalyticsProcessor(
+            HibernateBundle<ShortenerConfiguration> hibernateBundle,
+            LinkDAO dao) {
+        return new UnitOfWorkAwareProxyFactory(hibernateBundle).create(AnalyticsProcessor.class, LinkDAO.class, dao);
     }
 
     @Provides

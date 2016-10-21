@@ -3,6 +3,7 @@ package com.jingyuyao.shortener.resources;
 import com.google.common.collect.ImmutableList;
 import com.jingyuyao.shortener.api.CreateLink;
 import com.jingyuyao.shortener.api.ShortenedLink;
+import com.jingyuyao.shortener.core.AnalyticsProcessor;
 import com.jingyuyao.shortener.core.Link;
 import com.jingyuyao.shortener.core.IdEncoder;
 import com.jingyuyao.shortener.db.LinkDAO;
@@ -41,6 +42,8 @@ public class LinkResourceTest {
     @Mock
     private Jedis jedis;
     @Mock
+    private AnalyticsProcessor analyticsProcessor;
+    @Mock
     private CreateLink createLink;
     @Captor
     private ArgumentCaptor<Link> linkCaptor;
@@ -57,7 +60,7 @@ public class LinkResourceTest {
         dummyLink = new Link(ID, URL, INITIAL_VISITS);
         dummyLinks = ImmutableList.of(dummyLink);
 
-        resource = new LinkResource(validator, dao, jedis);
+        resource = new LinkResource(validator, dao, jedis, analyticsProcessor);
     }
 
     @Test
@@ -94,8 +97,7 @@ public class LinkResourceTest {
 
         assertThat(response.getStatusInfo()).isEqualTo(Response.Status.TEMPORARY_REDIRECT);
         assertThat(response.getLocation().toString()).isEqualTo(URL);
-        verify(dao).save(linkCaptor.capture());
-        assertThat(linkCaptor.getValue().getVisits()).isEqualTo(INITIAL_VISITS + 1);
+        verify(analyticsProcessor).process(linkCaptor.capture());
         verify(jedis).set(ENCODED_ID, URL);
     }
 
