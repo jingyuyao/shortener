@@ -47,6 +47,7 @@ public class Link {
     @URL
     private String url;
 
+    // TODO: Move this out of the link table when we track more stuff
     @Column(nullable = false)
     private int visits;
 }

@@ -38,6 +38,9 @@ public class LinkResource {
         this.linkAnalytics = linkAnalytics;
     }
 
+    /**
+     * @return all the links in the database
+     */
     @GET
     @UnitOfWork
     public Response getLinks() {
@@ -47,6 +50,11 @@ public class LinkResource {
         return Response.ok(shortenedLinks).build();
     }
 
+    /**
+     * Create a new {@link Link} from the given {@link CreateLink} instance.
+     * @param createLink the {@link CreateLink} instance containing the url
+     * @return the shortened link
+     */
     @POST
     @UnitOfWork
     @Consumes(MediaType.APPLICATION_JSON)
@@ -70,6 +78,16 @@ public class LinkResource {
         }
     }
 
+    /**
+     * Redirect to the url specified by {@code id} if it exists.
+     *
+     * This method does not invoke a database connection before returning
+     * if {@code id} exists in the redis database. It will delegate database
+     * operations to a separate thread to speed up response time.
+     *
+     * @param id the id of the shortened url
+     * @return a redirect response if {@code id} is valid
+     */
     @GET
     @Path("/{id}")
     public Response redirect(@PathParam("id") String id) {

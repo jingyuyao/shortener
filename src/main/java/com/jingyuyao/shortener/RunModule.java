@@ -39,7 +39,7 @@ class RunModule extends AbstractModule {
 
     @Provides
     @Singleton
-    LinkAnalytics provideAnalyticsProcessor(
+    LinkAnalytics provideLinkAnalytics(
             HibernateBundle<ShortenerConfiguration> hibernateBundle,
             LinkDAO dao) {
         return new UnitOfWorkAwareProxyFactory(hibernateBundle).create(LinkAnalytics.class, LinkDAO.class, dao);

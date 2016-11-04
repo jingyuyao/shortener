@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Contains hash functions to convert a {@link Link} ID to and from a string.
+ * Provides static functions to "hash" numbers to strings and vice versa.
  *
  * <see>http://stackoverflow.com/a/561704</see>
  */
@@ -19,6 +19,11 @@ public class IdEncoder {
         }
     }
 
+    /**
+     * Encode a number as a string.
+     * @param number the number to be encoded
+     * @return the encoded string
+     */
     public static String encode(int number) {
         StringBuilder builder = new StringBuilder();
         while (number != 0) {
@@ -30,6 +35,11 @@ public class IdEncoder {
         return builder.reverse().toString();
     }
 
+    /**
+     * Decode a string back to its original number
+     * @param str the string to be decoded
+     * @return the decoded number
+     */
     public static int decode(String str) {
         int number = 0;
         for (int i = 0; i < str.length(); i++) {
