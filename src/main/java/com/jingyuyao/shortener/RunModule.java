@@ -2,7 +2,7 @@ package com.jingyuyao.shortener;
 
 import com.google.inject.AbstractModule;
 import com.google.inject.Provides;
-import com.jingyuyao.shortener.core.AnalyticsProcessor;
+import com.jingyuyao.shortener.core.LinkAnalytics;
 import com.jingyuyao.shortener.db.LinkDAO;
 import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.hibernate.UnitOfWorkAwareProxyFactory;
@@ -39,10 +39,10 @@ class RunModule extends AbstractModule {
 
     @Provides
     @Singleton
-    AnalyticsProcessor provideAnalyticsProcessor(
+    LinkAnalytics provideAnalyticsProcessor(
             HibernateBundle<ShortenerConfiguration> hibernateBundle,
             LinkDAO dao) {
-        return new UnitOfWorkAwareProxyFactory(hibernateBundle).create(AnalyticsProcessor.class, LinkDAO.class, dao);
+        return new UnitOfWorkAwareProxyFactory(hibernateBundle).create(LinkAnalytics.class, LinkDAO.class, dao);
     }
 
     @Provides

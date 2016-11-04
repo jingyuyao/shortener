@@ -3,7 +3,7 @@ package com.jingyuyao.shortener.resources;
 import com.google.common.collect.ImmutableList;
 import com.jingyuyao.shortener.api.CreateLink;
 import com.jingyuyao.shortener.api.ShortenedLink;
-import com.jingyuyao.shortener.core.AnalyticsProcessor;
+import com.jingyuyao.shortener.core.LinkAnalytics;
 import com.jingyuyao.shortener.core.Link;
 import com.jingyuyao.shortener.core.IdEncoder;
 import com.jingyuyao.shortener.db.LinkDAO;
@@ -42,7 +42,7 @@ public class LinkResourceTest {
     @Mock
     private Jedis jedis;
     @Mock
-    private AnalyticsProcessor analyticsProcessor;
+    private LinkAnalytics linkAnalytics;
     @Mock
     private CreateLink createLink;
     @Captor
@@ -60,7 +60,7 @@ public class LinkResourceTest {
         dummyLink = new Link(ID, URL, INITIAL_VISITS);
         dummyLinks = ImmutableList.of(dummyLink);
 
-        resource = new LinkResource(validator, dao, jedis, analyticsProcessor);
+        resource = new LinkResource(validator, dao, jedis, linkAnalytics);
     }
 
     @Test
@@ -91,13 +91,13 @@ public class LinkResourceTest {
 
     @Test
     public void redirect_not_cached() {
-        when(analyticsProcessor.visited(ID)).thenReturn(Optional.of(dummyLink));
+        when(linkAnalytics.visit(ID)).thenReturn(Optional.of(dummyLink));
 
         Response response = resource.redirect(ENCODED_ID);
 
         assertThat(response.getStatusInfo()).isEqualTo(Response.Status.TEMPORARY_REDIRECT);
         assertThat(response.getLocation().toString()).isEqualTo(URL);
-        verify(analyticsProcessor).visited(ID);
+        verify(linkAnalytics).visit(ID);
         verify(jedis).set(ENCODED_ID, URL);
     }
 

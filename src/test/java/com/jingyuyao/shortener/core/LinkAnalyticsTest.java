@@ -14,18 +14,18 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
-public class AnalyticsProcessorTest {
+public class LinkAnalyticsTest {
     @Mock
     private LinkDAO dao;
     @Captor
     ArgumentCaptor<Link> linkCaptor;
 
-    private AnalyticsProcessor analyticsProcessor;
+    private LinkAnalytics linkAnalytics;
 
     @Before
     public void setUp() {
         MockitoAnnotations.initMocks(this);
-        analyticsProcessor = new AnalyticsProcessor(dao);
+        linkAnalytics = new LinkAnalytics(dao);
     }
 
     @Test
@@ -33,7 +33,7 @@ public class AnalyticsProcessorTest {
         Link link = new Link(0 , "http://www.example.org", 0);
         when(dao.getById(0)).thenReturn(Optional.of(link));
 
-        analyticsProcessor.visited(0);
+        linkAnalytics.visit(0);
 
         verify(dao).save(linkCaptor.capture());
         assertThat(linkCaptor.getValue().getVisits()).isEqualTo(1);

@@ -5,15 +5,15 @@ import io.dropwizard.hibernate.UnitOfWork;
 
 import java.util.Optional;
 
-public class AnalyticsProcessor {
+public class LinkAnalytics {
     private final LinkDAO dao;
 
-    public AnalyticsProcessor(LinkDAO dao) {
+    public LinkAnalytics(LinkDAO dao) {
         this.dao = dao;
     }
 
     @UnitOfWork
-    public Optional<Link> visited(int id) {
+    public Optional<Link> visit(int id) {
         Optional<Link> optionalLink = dao.getById(id);
         if (optionalLink.isPresent()) {
             Link link = optionalLink.get();

@@ -3,7 +3,7 @@ package com.jingyuyao.shortener.resources;
 import com.jingyuyao.shortener.api.ApiError;
 import com.jingyuyao.shortener.api.CreateLink;
 import com.jingyuyao.shortener.api.ShortenedLink;
-import com.jingyuyao.shortener.core.AnalyticsProcessor;
+import com.jingyuyao.shortener.core.LinkAnalytics;
 import com.jingyuyao.shortener.core.Link;
 import com.jingyuyao.shortener.core.IdEncoder;
 import com.jingyuyao.shortener.db.LinkDAO;
@@ -28,14 +28,14 @@ public class LinkResource {
     private final Validator validator;
     private final LinkDAO dao;
     private final Jedis jedis;
-    private final AnalyticsProcessor analyticsProcessor;
+    private final LinkAnalytics linkAnalytics;
 
     @Inject
-    LinkResource(Validator validator, LinkDAO dao, Jedis jedis, AnalyticsProcessor analyticsProcessor) {
+    LinkResource(Validator validator, LinkDAO dao, Jedis jedis, LinkAnalytics linkAnalytics) {
         this.validator = validator;
         this.dao = dao;
         this.jedis = jedis;
-        this.analyticsProcessor = analyticsProcessor;
+        this.linkAnalytics = linkAnalytics;
     }
 
     @GET
@@ -73,7 +73,7 @@ public class LinkResource {
     @GET
     @Path("/{id}")
     public Response redirect(@PathParam("id") String id) {
-        // No need to use @UnitOfWork annotation since we cheated by using analyticsProcessor to
+        // No need to use @UnitOfWork annotation since we cheated by using linkAnalytics to
         // find the link for us. This avoids getting an unused JDBC connection when we have a cache hit
         if (jedis.exists(id)) {
             return redirectCached(id);
@@ -82,7 +82,7 @@ public class LinkResource {
     }
 
     private Response redirectNotCached(String id) {
-        Optional<Link> optionalLink = analyticsProcessor.visited(IdEncoder.decode(id));
+        Optional<Link> optionalLink = linkAnalytics.visit(IdEncoder.decode(id));
         if (!optionalLink.isPresent()) {
             return Response.status(Response.Status.NOT_FOUND).build();
         }
@@ -104,7 +104,7 @@ public class LinkResource {
             return Response.status(Response.Status.INTERNAL_SERVER_ERROR).build();
         }
 
-        new Thread(() -> analyticsProcessor.visited(IdEncoder.decode(id))).start();
+        new Thread(() -> linkAnalytics.visit(IdEncoder.decode(id))).start();
 
         return Response.temporaryRedirect(optionalUri.get()).build();
     }
