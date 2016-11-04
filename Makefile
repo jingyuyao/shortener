@@ -1,7 +1,7 @@
 VERSION_FILE:=target/classes/version.txt
-VERSION:=${shell head -n 1 ${VERSION_FILE}}
+VERSION=${shell head -n 1 ${VERSION_FILE}}
 TARGET_JAR=target/shortener-${VERSION}.jar
-JAVA_TARGET:=java -jar ${TARGET_JAR}
+JAVA_TARGET=java -jar ${TARGET_JAR}
 CONFIG:=config.yml
 
 default: package run
