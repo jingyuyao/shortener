@@ -22,6 +22,10 @@ public class LinkDAO extends AbstractDAO<Link> {
         return persist(link);
     }
 
+    public void delete(Link link) {
+        currentSession().delete(link);
+    }
+
     /**
      * Retrieves a {@link Link} using its ID.
      * @param id the ID of the link to retrieve

@@ -2,6 +2,7 @@ package com.jingyuyao.shortener.resources;
 
 import com.jingyuyao.shortener.api.ApiError;
 import com.jingyuyao.shortener.api.CreateLink;
+import com.jingyuyao.shortener.api.DeleteLink;
 import com.jingyuyao.shortener.api.ShortenedLink;
 import com.jingyuyao.shortener.core.LinkAnalytics;
 import com.jingyuyao.shortener.core.Link;
@@ -75,6 +76,26 @@ public class LinkResource {
                     .status(Response.Status.BAD_REQUEST)
                     .entity(ApiError.create(violations))
                     .build();
+        }
+    }
+
+    /**
+     * Deletes a {@link Link} with the given {@link DeleteLink} instance.
+     * @param deleteLink {@link DeleteLink} instance containing the id of the link to delete
+     * @return 200 if success else 400
+     */
+    @DELETE
+    @UnitOfWork
+    @Consumes(MediaType.APPLICATION_JSON)
+    public Response deleteLink(DeleteLink deleteLink) {
+        int decodedId = IdEncoder.decode(deleteLink.getId());
+        Optional<Link> optionalLink = dao.getById(decodedId);
+        if (optionalLink.isPresent()) {
+            jedis.del(deleteLink.getId());
+            dao.delete(optionalLink.get());
+            return Response.ok().build();
+        } else {
+            return Response.status(Response.Status.BAD_REQUEST).build();
         }
     }
 

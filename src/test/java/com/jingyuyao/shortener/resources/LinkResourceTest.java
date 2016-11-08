@@ -2,6 +2,7 @@ package com.jingyuyao.shortener.resources;
 
 import com.google.common.collect.ImmutableList;
 import com.jingyuyao.shortener.api.CreateLink;
+import com.jingyuyao.shortener.api.DeleteLink;
 import com.jingyuyao.shortener.api.ShortenedLink;
 import com.jingyuyao.shortener.core.LinkAnalytics;
 import com.jingyuyao.shortener.core.Link;
@@ -45,6 +46,8 @@ public class LinkResourceTest {
     private LinkAnalytics linkAnalytics;
     @Mock
     private CreateLink createLink;
+    @Mock
+    private DeleteLink deleteLink;
     @Captor
     private ArgumentCaptor<Link> linkCaptor;
 
@@ -87,6 +90,19 @@ public class LinkResourceTest {
         verify(dao).save(linkCaptor.capture());
         assertThat(linkCaptor.getValue().getUrl()).isEqualTo(URL);
         assertThat(linkCaptor.getValue().getVisits()).isZero();
+    }
+
+    @Test
+    public void deleteLink() {
+        when(deleteLink.getId()).thenReturn(ENCODED_ID);
+        when(dao.getById(ID)).thenReturn(Optional.of(dummyLink));
+
+        Response response = resource.deleteLink(deleteLink);
+
+        assertThat(response.getStatusInfo()).isEqualTo(Response.Status.OK);
+        verify(dao).delete(linkCaptor.capture());
+        assertThat(linkCaptor.getValue().getId()).isEqualTo(ID);
+        verify(jedis).del(ENCODED_ID);
     }
 
     @Test
