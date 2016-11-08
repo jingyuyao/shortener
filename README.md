@@ -2,11 +2,12 @@
 
 Prerequisites
 ---
-- Maven
+- Maven (latest)
 - Java 8
-- Mysql
-- Redis
+- Mysql 5.7
+- Redis (assumes no local authentication)
 - Lombok plugin for IDE of your choice
+- httpie (optional)
 
 How to start the Shortener application
 ---
@@ -15,12 +16,15 @@ How to start the Shortener application
 2. `make local` to set up local database with test database
 3. `make migrate` to sync database changes
 4. `make run` to start the application
-5. To check that your application is running enter url `http://localhost:8080`
 
-Health Check
+Using the application (with httpie)
 ---
 
-To see your applications health enter url `http://localhost:8081/healthcheck`
+- `http localhost:8080/` for a list of shortened urls
+- `http localhost:8080/ url="http://new.url` to create a new shortened link
+- `http delete localhost:8080/ id=a` to delete link with the id 'a'
+- `http localhost:8080/a` to be redirected to the url pointed to by the shortened link 'a'
+- `http localhost:8081/healthcheck` to see a list of enabled health checks
 
 Dependency Injection
 ---
