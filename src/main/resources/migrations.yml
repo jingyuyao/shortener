@@ -14,8 +14,31 @@ databaseChangeLog:
                     primaryKey: true
                     nullable: false
               - column:
+                  name: owner
+                  type: varchar(255)
+              - column:
                   name: url
                   type: text
               - column:
                   name: visits
                   type: int unsigned
+        - createTable:
+            tableName: user
+            columns:
+              - column:
+                  name: name
+                  type: varchar(255)
+                  constraints:
+                    primaryKey: true
+                    nullable: false
+              - column:
+                  name: password
+                  type: text
+        - addForeignKeyConstraint:
+            baseColumnNames: owner
+            baseTableName: link
+            constraintName: fk_owner
+            onDelete: SET NULL
+            onUpdate: CASCADE
+            referencedColumnNames: name
+            referencedTableName: user

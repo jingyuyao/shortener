@@ -92,6 +92,11 @@
             <version>2.8.1</version>
             <type>jar</type>
         </dependency>
+        <dependency>
+            <groupId>org.mindrot</groupId>
+            <artifactId>jbcrypt</artifactId>
+            <version>0.3m</version>
+        </dependency>
 
         <dependency>
             <groupId>io.dropwizard</groupId>
