@@ -35,6 +35,7 @@ public class Link {
     private int id;
 
     @ManyToOne
+    @JoinColumn(name = "owner_id")
     private User owner;
 
     @Column(nullable = false)

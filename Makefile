@@ -9,7 +9,7 @@ default: package run
 package:
 	mvn clean package
 
-run:
+run: package
 	${JAVA_TARGET} server ${CONFIG}
 
 local:

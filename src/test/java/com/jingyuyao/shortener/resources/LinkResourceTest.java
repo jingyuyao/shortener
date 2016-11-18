@@ -7,6 +7,7 @@ import com.jingyuyao.shortener.api.ShortenedLink;
 import com.jingyuyao.shortener.core.LinkAnalytics;
 import com.jingyuyao.shortener.core.Link;
 import com.jingyuyao.shortener.core.IdEncoder;
+import com.jingyuyao.shortener.core.User;
 import com.jingyuyao.shortener.db.LinkDAO;
 import org.junit.Before;
 import org.junit.Test;
@@ -48,6 +49,8 @@ public class LinkResourceTest {
     private CreateLink createLink;
     @Mock
     private DeleteLink deleteLink;
+    @Mock
+    private User owner;
     @Captor
     private ArgumentCaptor<Link> linkCaptor;
 
@@ -60,7 +63,7 @@ public class LinkResourceTest {
         MockitoAnnotations.initMocks(this);
         when(validator.validate(any(Link.class))).thenReturn(Collections.emptySet());
 
-        dummyLink = new Link(ID, URL, INITIAL_VISITS);
+        dummyLink = new Link(ID, owner, URL, INITIAL_VISITS);
         dummyLinks = ImmutableList.of(dummyLink);
 
         resource = new LinkResource(validator, dao, jedis, linkAnalytics);

@@ -5,6 +5,7 @@ import com.google.inject.AbstractModule;
 import com.google.inject.BindingAnnotation;
 import com.google.inject.Provides;
 import com.jingyuyao.shortener.core.Link;
+import com.jingyuyao.shortener.core.User;
 import com.jingyuyao.shortener.db.DAOModule;
 import io.dropwizard.db.DataSourceFactory;
 import io.dropwizard.db.PooledDataSourceFactory;
@@ -38,7 +39,7 @@ class InitializeModule extends AbstractModule {
     @Provides
     @Singleton
     ImmutableList<Class<?>> provideDatabaseEntities() {
-        return ImmutableList.of(Link.class);
+        return ImmutableList.of(Link.class, User.class);
     }
 
     @Provides

@@ -17,6 +17,8 @@ import static org.mockito.Mockito.when;
 public class LinkAnalyticsTest {
     @Mock
     private LinkDAO dao;
+    @Mock
+    private User owner;
     @Captor
     ArgumentCaptor<Link> linkCaptor;
 
@@ -30,7 +32,7 @@ public class LinkAnalyticsTest {
 
     @Test
     public void visited() {
-        Link link = new Link(0 , "http://www.example.org", 0);
+        Link link = new Link(0, owner, "http://www.example.org", 0);
         when(dao.getById(0)).thenReturn(Optional.of(link));
 
         linkAnalytics.visit(0);
