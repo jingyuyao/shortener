@@ -12,6 +12,10 @@ import javax.persistence.*;
 @NamedQueries(
         {
                 @NamedQuery(
+                        name = User.FIND_ALL,
+                        query = "SELECT u FROM User u"
+                ),
+                @NamedQuery(
                         name = User.FIND_NAME,
                         query = "SELECT u FROM User u WHERE u.name = :name"
                 ),
@@ -25,6 +29,7 @@ import javax.persistence.*;
 @NoArgsConstructor
 @Table(name = "user")
 public class User {
+    public static final String FIND_ALL = "com.jingyuyao.shortener.core.User.findAll";
     public static final String FIND_NAME = "com.jingyuyao.shortener.core.User.findName";
     public static final String FIND_ID = "com.jingyuyao.shortner.core.User.findId";
 

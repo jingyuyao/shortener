@@ -23,7 +23,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.stream.Collectors;
 
-@Path("/")
+@Path("/l")
 @Produces(MediaType.APPLICATION_JSON)
 public class LinkResource {
     private final Validator validator;

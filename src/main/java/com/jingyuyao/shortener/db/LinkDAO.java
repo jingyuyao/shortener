@@ -32,7 +32,6 @@ public class LinkDAO extends AbstractDAO<Link> {
      * @return the {@link Link} with the given ID
      */
     public Optional<Link> getById(int id) {
-        Link link = uniqueResult(namedQuery(Link.FIND_ID).setParameter("id", id));
-        return Optional.ofNullable(link);
+        return Optional.ofNullable(uniqueResult(namedQuery(Link.FIND_ID).setParameter("id", id)));
     }
 }

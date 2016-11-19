@@ -4,6 +4,7 @@ import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Key;
 import com.jingyuyao.shortener.resources.LinkResource;
+import com.jingyuyao.shortener.resources.UserResource;
 import io.dropwizard.Application;
 import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.jersey.setup.JerseyEnvironment;
@@ -43,6 +44,7 @@ public class ShortenerApplication extends Application<ShortenerConfiguration> {
     /** Sets up the Jersey environment with resources */
     private void setUpJersey(JerseyEnvironment jersey) {
         jersey.register(i(LinkResource.class));
+        jersey.register(i(UserResource.class));
     }
 
     /** Helper method to get an instance out of the {@link Injector} */

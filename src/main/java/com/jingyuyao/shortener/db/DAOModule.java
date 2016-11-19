@@ -6,5 +6,6 @@ public class DAOModule extends AbstractModule {
     @Override
     protected void configure() {
         bind(LinkDAO.class);
+        bind(UserDAO.class);
     }
 }
