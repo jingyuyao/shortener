@@ -3,6 +3,7 @@ package com.jingyuyao.shortener;
 import com.google.inject.Guice;
 import com.google.inject.Injector;
 import com.google.inject.Key;
+import com.jingyuyao.shortener.resources.HomeResource;
 import com.jingyuyao.shortener.resources.LinkResource;
 import com.jingyuyao.shortener.resources.UserResource;
 import io.dropwizard.Application;
@@ -11,6 +12,7 @@ import io.dropwizard.jersey.setup.JerseyEnvironment;
 import io.dropwizard.migrations.MigrationsBundle;
 import io.dropwizard.setup.Bootstrap;
 import io.dropwizard.setup.Environment;
+import io.dropwizard.views.ViewBundle;
 
 public class ShortenerApplication extends Application<ShortenerConfiguration> {
 
@@ -29,6 +31,7 @@ public class ShortenerApplication extends Application<ShortenerConfiguration> {
     public void initialize(final Bootstrap<ShortenerConfiguration> bootstrap) {
         injector = Guice.createInjector(new InitializeModule());
 
+        bootstrap.addBundle(i(new Key<ViewBundle<ShortenerConfiguration>>(){}));
         bootstrap.addBundle(i(new Key<MigrationsBundle<ShortenerConfiguration>>(){}));
         bootstrap.addBundle(i(new Key<HibernateBundle<ShortenerConfiguration>>(){}));
     }
@@ -43,6 +46,7 @@ public class ShortenerApplication extends Application<ShortenerConfiguration> {
 
     /** Sets up the Jersey environment with resources */
     private void setUpJersey(JerseyEnvironment jersey) {
+        jersey.register(i(HomeResource.class));
         jersey.register(i(LinkResource.class));
         jersey.register(i(UserResource.class));
     }
