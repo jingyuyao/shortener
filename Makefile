@@ -9,11 +9,11 @@ default: package run
 package:
 	mvn clean package
 
-run: package
+run:
 	${JAVA_TARGET} server ${CONFIG}
 
 local:
 	./db_setup.sh
 
-migrate: package
+migrate:
 	${JAVA_TARGET} db migrate ${CONFIG}

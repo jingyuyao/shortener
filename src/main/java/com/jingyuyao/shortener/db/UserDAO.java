@@ -29,8 +29,4 @@ public class UserDAO extends AbstractDAO<User> {
     public Optional<User> getById(int id) {
         return Optional.ofNullable(uniqueResult(namedQuery(User.FIND_ID).setParameter("id", id)));
     }
-
-    public Optional<User> getByName(String name) {
-        return Optional.ofNullable(uniqueResult(namedQuery(User.FIND_NAME).setParameter("name", name)));
-    }
 }

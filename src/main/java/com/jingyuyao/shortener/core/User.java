@@ -3,7 +3,6 @@ package com.jingyuyao.shortener.core;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import org.hibernate.validator.constraints.Length;
 
 import javax.persistence.*;
 
@@ -16,10 +15,6 @@ import javax.persistence.*;
                         query = "SELECT u FROM User u"
                 ),
                 @NamedQuery(
-                        name = User.FIND_NAME,
-                        query = "SELECT u FROM User u WHERE u.name = :name"
-                ),
-                @NamedQuery(
                         name = User.FIND_ID,
                         query = "SELECT u FROM User u WHERE u.id = :id"
                 )
@@ -30,17 +25,30 @@ import javax.persistence.*;
 @Table(name = "user")
 public class User {
     public static final String FIND_ALL = "com.jingyuyao.shortener.core.User.findAll";
-    public static final String FIND_NAME = "com.jingyuyao.shortener.core.User.findName";
     public static final String FIND_ID = "com.jingyuyao.shortner.core.User.findId";
 
+    /**
+     * The internal ID for this application
+     */
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int id;
 
-    @Column(nullable = false)
-    @Length(max = 255)
-    private String name;
+    /**
+     * ID from external sources such as Google auth
+     */
+    @Column(nullable = false, name = "external_id")
+    private int externalId;
+
+    /**
+     * Where this account originated from. i.e Google, Facebook...
+     */
+    @Column(nullable = false, name = "external_source")
+    private String externalSource;
 
     @Column(nullable = false)
-    private String password;
+    private String email;
+
+    @Column
+    private String name;
 }

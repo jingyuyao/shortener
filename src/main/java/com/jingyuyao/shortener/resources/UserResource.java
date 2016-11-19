@@ -6,6 +6,7 @@ import com.jingyuyao.shortener.api.CreateUser;
 import com.jingyuyao.shortener.core.User;
 import com.jingyuyao.shortener.db.UserDAO;
 import io.dropwizard.hibernate.UnitOfWork;
+import org.hibernate.HibernateException;
 
 import javax.inject.Inject;
 import javax.validation.ConstraintViolation;
@@ -44,14 +45,20 @@ public class UserResource {
     @UnitOfWork
     public Response createUser(CreateUser createUser) {
         User user = new User();
+        user.setEmail(createUser.getEmail());
+        user.setExternalId(createUser.getExternalId());
+        user.setExternalSource(createUser.getExternalSource());
         user.setName(createUser.getName());
-        user.setPassword(createUser.getPassword());
 
         Set<ConstraintViolation<User>> violations = validator.validate(user);
 
         if (violations.isEmpty()) {
-            user = dao.save(user);
-            return Response.ok(new ApiUser(user)).build();
+            try {
+                user = dao.save(user);
+                return Response.ok(new ApiUser(user)).build();
+            } catch (HibernateException e) {
+                return Response.status(Response.Status.BAD_REQUEST).build();
+            }
         } else {
             return Response
                     .status(Response.Status.BAD_REQUEST)

@@ -33,13 +33,22 @@ databaseChangeLog:
                     primaryKey: true
                     nullable: false
               - column:
-                  name: name
-                  type: varchar(255)
+                  name: external_id
+                  type: int unsigned
                   constraints:
-                    unique: true
                     nullable: false
               - column:
-                  name: password
+                  name: external_source
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: email
+                  type: text
+                  constraints:
+                    nullable: false
+              - column:
+                  name: name
                   type: text
         - addForeignKeyConstraint:
             baseColumnNames: owner_id
