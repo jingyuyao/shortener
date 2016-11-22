@@ -32,7 +32,6 @@ public class ShortenerApplication extends Application<ShortenerConfiguration> {
         injector = Guice.createInjector(new InitializeModule());
 
         bootstrap.addBundle(i(AssetsBundle.class));
-        bootstrap.addBundle(i(new Key<ViewBundle<ShortenerConfiguration>>(){}));
         bootstrap.addBundle(i(new Key<MigrationsBundle<ShortenerConfiguration>>(){}));
         bootstrap.addBundle(i(new Key<HibernateBundle<ShortenerConfiguration>>(){}));
     }
