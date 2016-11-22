@@ -1,5 +1,5 @@
 server:
-  rootPath: /a/
+  rootPath: /api/
 
 logging:
   level: INFO

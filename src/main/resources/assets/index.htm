@@ -1,10 +1,21 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    <title>Shortener</title>
     <meta charset="UTF-8">
-    <title>Hello</title>
+    <meta name="google-signin-client_id" content="850840293045-cjtgbesrdmnld2rmhrjaet2m90d5b4c4.apps.googleusercontent.com">
+    <link rel="stylesheet" href="/css/main.css">
 </head>
 <body>
-    <h1>Hello assets!</h1>
+    <div class="sign-in-buttons">
+        <div id="sign-in-button"></div>
+        <button id="sign-out-button" class="hidden" onclick="googleSignOut();">Sign out</button>
+    </div>
+    <div class="url-input-row">
+        <input id="url-input" onkeyup="urlInputKeyUp(event);" type="text" placeholder="Original url here...">
+        <button onclick="shorten();">Shorten</button>
+    </div>
+    <script src="/js/main.js"></script>
+    <script src="https://apis.google.com/js/platform.js?onload=googleLoaded" async defer></script>
 </body>
 </html>

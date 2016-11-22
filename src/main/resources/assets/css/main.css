@@ -1,0 +1,15 @@
+.hidden {
+    display: none;
+}
+
+.visible {
+    display: block;
+}
+
+.sign-in-buttons {
+    display: flex;
+}
+
+.url-input-row {
+    display: flex;
+}
