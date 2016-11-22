@@ -34,7 +34,7 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: external_id
-                  type: int unsigned
+                  type: varchar(255)
                   constraints:
                     nullable: false
               - column:
@@ -44,12 +44,12 @@ databaseChangeLog:
                     nullable: false
               - column:
                   name: email
-                  type: text
+                  type: varchar(255)
                   constraints:
                     nullable: false
               - column:
                   name: name
-                  type: text
+                  type: varchar(255)
         - addForeignKeyConstraint:
             baseColumnNames: owner_id
             baseTableName: link
@@ -58,3 +58,10 @@ databaseChangeLog:
             onUpdate: CASCADE
             referencedColumnNames: id
             referencedTableName: user
+        - createIndex:
+            tableName: user
+            indexName: idx_external_id
+            columns:
+              - column:
+                  name: external_id
+                  type: varchar(255)

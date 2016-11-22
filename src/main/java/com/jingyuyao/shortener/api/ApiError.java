@@ -24,6 +24,7 @@ public class ApiError {
      * @return an {@link ApiError} with a list of error messages extracted from the violations
      */
     public static <T> ApiError create(Set<ConstraintViolation<T>> violations) {
+        // TODO: Gotta know the fields causing the erros
         List<String> errorMessages = violations
                 .stream()
                 .map(ConstraintViolation::getMessage)

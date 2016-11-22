@@ -45,9 +45,9 @@ public class UserResource {
     @UnitOfWork
     public Response createUser(CreateUser createUser) {
         User user = new User();
-        user.setEmail(createUser.getEmail());
         user.setExternalId(createUser.getExternalId());
         user.setExternalSource(createUser.getExternalSource());
+        user.setEmail(createUser.getEmail());
         user.setName(createUser.getName());
 
         Set<ConstraintViolation<User>> violations = validator.validate(user);

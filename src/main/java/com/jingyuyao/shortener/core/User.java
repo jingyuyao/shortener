@@ -3,8 +3,10 @@ package com.jingyuyao.shortener.core;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.validator.constraints.NotBlank;
 
 import javax.persistence.*;
+import javax.validation.constraints.Size;
 
 @Data
 @Entity
@@ -38,17 +40,24 @@ public class User {
      * ID from external sources such as Google auth
      */
     @Column(nullable = false, name = "external_id")
-    private int externalId;
+    @NotBlank
+    @Size(max = 255)
+    private String externalId;
 
     /**
      * Where this account originated from. i.e Google, Facebook...
      */
     @Column(nullable = false, name = "external_source")
+    @NotBlank
+    @Size(max = 255)
     private String externalSource;
 
     @Column(nullable = false)
+    @NotBlank
+    @Size(max = 255)
     private String email;
 
     @Column
+    @Size(max = 255)
     private String name;
 }
