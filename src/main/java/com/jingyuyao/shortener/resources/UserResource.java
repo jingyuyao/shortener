@@ -44,11 +44,14 @@ public class UserResource {
     @POST
     @UnitOfWork
     public Response createUser(CreateUser createUser) {
-        User user = new User();
-        user.setExternalId(createUser.getExternalId());
-        user.setExternalSource(createUser.getExternalSource());
-        user.setEmail(createUser.getEmail());
-        user.setName(createUser.getName());
+        User user = null;
+
+        switch (createUser.getSource()) {
+            case "google":
+                user = createGoogleUser(createUser.getToken());
+        }
+
+        if (user == null) Response.status(Response.Status.BAD_REQUEST).build();
 
         Set<ConstraintViolation<User>> violations = validator.validate(user);
 
@@ -65,5 +68,10 @@ public class UserResource {
                     .entity(ApiError.create(violations))
                     .build();
         }
+    }
+
+    private User createGoogleUser(String token) {
+        // TODO: Finish me
+        return null;
     }
 }

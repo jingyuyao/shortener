@@ -6,8 +6,6 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class CreateUser {
-    private String externalId;
-    private String externalSource;
-    private String email;
-    private String name;
+    private String source;
+    private String token;
 }
