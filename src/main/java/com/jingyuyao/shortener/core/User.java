@@ -19,6 +19,10 @@ import javax.validation.constraints.Size;
                 @NamedQuery(
                         name = User.FIND_ID,
                         query = "SELECT u FROM User u WHERE u.id = :id"
+                ),
+                @NamedQuery(
+                        name = User.FIND_EXTERNAL_ID,
+                        query = "SELECT u FROM User u WHERE u.externalId = :externalId"
                 )
         }
 )
@@ -27,7 +31,8 @@ import javax.validation.constraints.Size;
 @Table(name = "user")
 public class User {
     public static final String FIND_ALL = "com.jingyuyao.shortener.core.User.findAll";
-    public static final String FIND_ID = "com.jingyuyao.shortner.core.User.findId";
+    public static final String FIND_ID = "com.jingyuyao.shortener.core.User.findId";
+    public static final String FIND_EXTERNAL_ID = "com.jingyuyao.shortener.core.User.findExternalId"; // Indexed
 
     /**
      * The internal ID for this application
