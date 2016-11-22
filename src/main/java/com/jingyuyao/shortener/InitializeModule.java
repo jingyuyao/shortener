@@ -13,7 +13,6 @@ import io.dropwizard.db.PooledDataSourceFactory;
 import io.dropwizard.hibernate.HibernateBundle;
 import io.dropwizard.hibernate.SessionFactoryFactory;
 import io.dropwizard.migrations.MigrationsBundle;
-import io.dropwizard.views.ViewBundle;
 import org.hibernate.SessionFactory;
 
 import javax.inject.Singleton;
@@ -48,12 +47,6 @@ class InitializeModule extends AbstractModule {
     @Singleton
     AssetsBundle provideAssetsBundle() {
         return new AssetsBundle("/assets/", "/");
-    }
-
-    @Provides
-    @Singleton
-    ViewBundle<ShortenerConfiguration> provideViewBundle() {
-        return new ViewBundle<>();
     }
 
     @Provides
